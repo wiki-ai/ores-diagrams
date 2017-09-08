@@ -23,16 +23,13 @@
 		  \& \& \node[entity] (wiki2) {Wiki revision}; \\
 	  % FIXME: Vary node styles?
       \node[entity] (comment1) {ORES \\ article quality};
-		\& \node[entity] (comment2) {Meta-ORES \\ article judgment};
+		\& \node[entity] (comment2) {JADE \\ article judgment};
 		  \& \node[entity] (comment3) {ORES \\ revision score};
-			\& \node[entity] (comment4) {Meta-ORES \\ revision judgment}; \\
-		  \& \node[entity] (reply1) {Reply}; \\
-		  \& \node[entity] (reply2a) {Reply};
-		  \& \node[entity] (reply2b) {Reply}; \\
+			\& \node[entity] (comment4) {JADE \\ revision judgment}; \\
   };
 
   \node [below=1cm, align=flush center] at (reply2a)
-  {\Large Meta-ORES \\ \normalsize object graph};
+  {\Large JADE \\ \normalsize object graph};
 
   % Draw the arrows between the nodes and label them.
   \draw[arrow] (comment1) -- (wiki1);
@@ -41,8 +38,5 @@
   \draw[arrow] (comment3) -- (wiki2);
   \draw[arrow] (comment4) -- (wiki2);
   \draw[arrow] (comment4) -- node[midway, below] {supports} (comment3);
-  \draw[arrow] (reply1) -- node[midway, right] {discusses} (comment2);
-  \draw[arrow] (reply2a) -- (reply1);
-  \draw[arrow] (reply2b) -- (reply1);
 \end{tikzpicture}
 \end{document}

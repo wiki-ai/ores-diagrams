@@ -1,0 +1,52 @@
+% Data flow diagram
+% Template adapted from http://www.texample.net/tikz/examples/data-flow-diagram/ by David Fokkema
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+
+% Custom, should be provided in the same directory.
+\usepackage{datastore}
+
+\begin{document}
+\begin{tikzpicture}[
+  font=\sffamily,
+  every matrix/.style={ampersand replacement=\&,column sep=1cm,row sep=1cm},
+  interface/.style={draw,thick,regular polygon,regular polygon sides=4,inner sep=0},
+  process/.style={draw,thick,rounded corners,inner sep=.3 cm},
+  datastore/.style={draw,thick,shape=datastore,inner sep=.3cm},
+  to/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  every node/.style={scale=0.9,align=center}]
+
+  % Position the nodes using a matrix layout.
+  \matrix{
+    \node[interface] (reviewer) {Reviewer};
+      \& \node[interface] (researcher) {Researcher}; \\
+      \& \node[process] (posit) {Posit artifacts \\ for review}; \\
+    \node[process] (review) {Review UI};
+      \& \node[datastore] (artifacts) {Artifacts \\ needing review}; \\
+    \node[process] (judge) {Make judgments};
+      \& \node[datastore] (scores) {ORES scores \\ on artifacts}; \\
+    \node[datastore] (judgments) {Judgments};
+        \& \& \node[process] (analyze) {Analyze \\ judgments}; \\
+    \node[process] (get) {Read scores \\ and judgments}; \\
+    \node[interface] (customer) {Customer}; \\
+  };
+
+  \node [below=2cm, right=0.5cm, align=flush center] at (customer)
+  {\Large Judgment and Dialog Engine (JADE) \\ \normalsize data flow diagram};
+
+  % Draw and label arrows between nodes.
+  \draw[to] (researcher) -- (posit);
+  \draw[to] (reviewer) -- (review);
+  \draw[to] (reviewer) -- (posit);
+  \draw[to] (review) -- (judge);
+  \draw[to] (posit) -- (artifacts);
+  \draw[to] (artifacts) -- (review);
+  \draw[to] (scores) -- (judge);
+  \draw[to] (judge) -- (judgments);
+  \draw[to] (judgments) -- (analyze);
+  \draw[to] (judgments) -- (get);
+  \draw[to] (get) -- (customer);
+  \draw[to] (analyze) to[bend right=25] (researcher);
+\end{tikzpicture}
+\end{document}
