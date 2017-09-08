@@ -15,38 +15,47 @@
   process/.style={draw,thick,rounded corners,inner sep=.3 cm},
   datastore/.style={draw,thick,shape=datastore,inner sep=.3cm},
   to/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  become/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize,dashed},
   every node/.style={scale=0.9,align=center}]
 
   % Position the nodes using a matrix layout.
   \matrix{
+        \& \& \node[interface] (researcher) {Researcher}; \\
     \node[interface] (reviewer) {Reviewer};
-      \& \node[interface] (researcher) {Researcher}; \\
-      \& \node[process] (posit) {Posit artifacts \\ for review}; \\
-    \node[process] (review) {Review UI};
-      \& \node[datastore] (artifacts) {Artifacts \\ needing review}; \\
-    \node[process] (judge) {Make judgments};
-      \& \node[datastore] (scores) {ORES scores \\ on artifacts}; \\
-    \node[datastore] (judgments) {Judgments};
-        \& \& \node[process] (analyze) {Analyze \\ judgments}; \\
-    \node[process] (get) {Read scores \\ and judgments}; \\
-    \node[interface] (customer) {Customer}; \\
+        \& \& \node[process] (posit) {Posit artifacts \\ for review}; \\
+      \& \node[process] (review) {Review UI};
+        \& \node[datastore] (artifacts) {Artifacts \\ needing review}; \\
+      \& \node[process] (judge) {Make judgments};
+        \& \node[datastore] (scores) {ORES scores \\ on artifacts};
+          \& \node[process] (analyze) {Analyze \\ judgments}; \\
+      \& \node[datastore] (judgments) {Judgments};
+          \& \& \node[process] (suppression) {Suppress \\ judgments}; \\
+      \& \node[process] (get) {Read scores \\ and judgments};
+          \& \& \node[interface] (admin) {Admin}; \\
+      \& \node[interface] (customer) {Customer}; \\
   };
 
-  \node [below=2cm, right=0.5cm, align=flush center] at (customer)
+  \node [below=2cm, right=0cm, align=flush center] at (customer)
   {\Large Judgment and Dialog Engine (JADE) \\ \normalsize data flow diagram};
 
   % Draw and label arrows between nodes.
-  \draw[to] (researcher) -- (posit);
-  \draw[to] (reviewer) -- (review);
-  \draw[to] (reviewer) -- (posit);
-  \draw[to] (review) -- (judge);
-  \draw[to] (posit) -- (artifacts);
-  \draw[to] (artifacts) -- (review);
-  \draw[to] (scores) -- (judge);
+  \draw[to] (researcher) -- node[midway,left] {curated artifacts} (posit);
+  \draw[to] (reviewer) to[bend left=25] node[near end,right] {submit \\ judgment} (review);
+  \draw[to] (review) to[bend left=25] node[near start,below] {rendered \\ judgments} (reviewer);
+  \draw[to] (reviewer) -- node[midway,above] {artifacts} (posit);
+  \draw[to] (review) -- node[midway,left] {new judgment} (judge);
+  \draw[to] (posit) -- node[midway,left] {artifacts} (artifacts);
+  \draw[to] (artifacts) -- node[midway,above] {artifacts} (review);
+  \draw[to] (scores) -- node[midway,above] {context} (judge);
   \draw[to] (judge) -- (judgments);
-  \draw[to] (judgments) -- (analyze);
+  \draw[to] (scores) -- node[midway,above] {scores} (analyze);
+  \draw[to] (judgments) to[bend right=15] node[near start,above] {query results} (analyze);
   \draw[to] (judgments) -- (get);
   \draw[to] (get) -- (customer);
-  \draw[to] (analyze) to[bend right=25] (researcher);
+  \draw[to] (analyze) to[bend right=25] node[near end,right] {analysis} (researcher);
+  \draw[to] (researcher) to[bend left=15] node[near end,left] {query, \\ code} (analyze);
+  \draw[become] (customer) to[bend left=25] node[very near start,left] {begin \\ review} (reviewer);
+  \draw[to] (suppression) -- node[midway,below] {delete \\ judgment} (judgments);
+  \draw[to] (admin) -- (suppression);
 \end{tikzpicture}
 \end{document}
