@@ -38,27 +38,30 @@
       \& \node[interface] (customer) {Customer}; \\
   };
 
-  \node [below=2cm, right=0cm, align=flush center] at (customer)
-  {\Large Judgment and Dialog Engine (JADE) \\ \normalsize data flow diagram};
+  \node [below=2cm, right=-2cm, align=flush center] at (customer)
+  {\Large Judgment and Dialog Engine (JADE) \\ \normalsize logical data flow diagram};
 
   % Draw and label arrows between nodes.
   \draw[to] (researcher) -- node[midway,left] {curated artifacts} (posit);
   \draw[to] (reviewer) to[bend left=25] node[near end,right] {submit \\ judgment} (review);
   \draw[to] (review) to[bend left=25] node[near start,below] {rendered \\ judgments} (reviewer);
-  \draw[to] (reviewer) -- node[midway,above] {artifacts} (posit);
+  \draw[to] (reviewer) -- node[midway,above] {targeted \\ artifacts} (posit);
   \draw[to] (review) -- node[midway,left] {new judgment} (judge);
   \draw[to] (posit) -- node[midway,left] {artifacts} (artifacts);
   \draw[to] (artifacts) -- node[midway,above] {artifacts} (review);
-  \draw[to] (scores) -- node[midway,above] {context} (judge);
-  \draw[to] (judge) -- (judgments);
+  \draw[to] (scores) -- node[near start,right] {context} (review);
+  \draw[to] (judge) -- node[midway, left] {new judgments} (judgments);
   \draw[to] (scores) -- node[midway,above] {scores} (analyze);
-  \draw[to] (judgments) to[bend right=15] node[near start,above] {query results} (analyze);
-  \draw[to] (judgments) -- (get);
-  \draw[to] (get) -- (customer);
+  \draw[to] (scores) to[bend left=15] node[near end, right] {scores} (get);
+  \draw[to] (judgments) to[bend right=15] node[very near end, right] {query results} (analyze);
+  \draw[to] (judgments) -- node[midway, right] {judgments} (get);
+  \draw[to] (get) -- node[midway, right] {rendered \\ judgments} (customer);
   \draw[to] (analyze) to[bend right=25] node[near end,right] {analysis} (researcher);
-  \draw[to] (researcher) to[bend left=15] node[near end,left] {query, \\ code} (analyze);
+  \draw[to] (researcher) to[bend left=10] node[midway, left] {query, \\ code} (analyze);
   \draw[become] (customer) to[bend left=25] node[very near start,left] {begin \\ review} (reviewer);
-  \draw[to] (suppression) -- node[midway,below] {delete \\ judgment} (judgments);
-  \draw[to] (admin) -- (suppression);
+  \draw[to] (suppression) -- node[near start,below] {delete \\ judgment} (judgments);
+  \draw[to] (admin) -- node[midway, right] {action} (suppression);
+  \draw[become] (customer) to[bend right=25] node[near start,below] {report \\ abuse} (admin);
+  \draw[become] (reviewer) to[bend left=25] node[near end,below] {feedback} (researcher);
 \end{tikzpicture}
 \end{document}
