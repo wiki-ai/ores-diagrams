@@ -24,10 +24,8 @@ Other
 Building
 ===
 
-Diagrams are either written in LaTeX or using ArgoUML.  To compile the .tex into .pdf,
+Diagrams are either written in LaTeX or using ArgoUML.
 
-  latexmk -pdf
+To compile the LaTex files into SVG and PDF, run
 
-To build a TeX file to SVG,
-
-  latexmk -dvi FILENAME.tex && dvisvgm --no-fonts FILENAME.dvi
+  make
