@@ -29,7 +29,7 @@
         \& \& \node[entity] (judgment) {JADE judgment \\ \{author: Awight \\ visibility: all \\ rank: normal\}}; \\
     \node[entity] (score1) {Score \\ \{good-faith: no\}};
       \& \node[entity] (score2) {Score \\ \{damaging: yes\}};
-        \& \node[entity] (comment) {Comment}; \\
+        \& \node[entity] (comment) {Flow post}; \\
     \node[entity] (schema1) {Schema: good-faith};
       \& \node[entity] (schema2) {Schema: damaging}; \\
   };
@@ -37,35 +37,43 @@
   % Draw the lines between the nodes and label them.
   \draw[line] (ores-scores) --
     node[very near start, left] {0..*}
-    node[midway, left] {regarding}
+    node[very near start, right] {scores}
     node[very near end, left] {1}
+    node[very near end, below] {regarding}
     (artifact);
   \draw[line] (judgment) --
     node[very near start, left] {0..*}
-    node[midway, right] {regarding}
+    node[very near start, right] {judgments}
     node[very near end, right] {1}
+    node[very near end, below] {regarding}
     (artifact);
   \draw[line] (previous) -- (artifact);
   \draw[line] (artifact) -- (next);
   \draw[line] (score1) --
     node[very near start, left] {0..*}
+    node[very near start, right] {scores}
     node[very near end, left] {1}
+    node[very near end, right] {judgment}
     (judgment);
   \draw[line] (score2) --
     node[very near start, left] {0..*}
     node[very near end, left] {1}
     (judgment);
   \draw[line] (comment) --
-    node[very near start, right] {0..1}
-    node[very near end, right] {1}
+    node[very near start, left] {0..1}
+    node[very near start, right] {comment}
+    node[very near end, left] {1}
+    node[very near end, right] {judgment}
     (judgment);
   \draw[line] (schema1) --
-    node[very near start, right] {1}
-    node[very near end, right] {0..*}
+    node[very near start, left] {1}
+    node[very near start, right] {schema}
+    node[very near end, left] {0..*}
+    node[very near end, right] {scores}
     (score1);
   \draw[line] (schema2) --
-    node[very near start, right] {1}
-    node[very near end, right] {0..*}
+    node[very near start, left] {1}
+    node[very near end, left] {0..*}
     (score2);
 
   \node [below=1cm, align=flush center] at (schema2)
