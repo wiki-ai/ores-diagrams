@@ -24,8 +24,6 @@ Other
 Building
 ===
 
-Diagrams are either written in LaTeX or using ArgoUML.
-
-To compile the LaTex files into SVG and PDF, run
+Diagrams are written in LaTeX.  To compile them into SVG and PDF for viewing, install the dependencies and then run
 
   make
