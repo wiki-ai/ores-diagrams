@@ -1,0 +1,62 @@
+% Data flow diagram
+% Template adapted from http://www.texample.net/tikz/examples/data-flow-diagram/ by David Fokkema
+\documentclass{article}
+\usepackage{tikz, tkz-euclide}
+\usetikzlibrary{arrows,shapes}
+
+% Custom, should be provided in the same directory.
+\usepackage{datastore}
+
+% Disable page number for better SVG.
+\pagenumbering{gobble}
+
+\begin{document}
+\begin{tikzpicture}[
+  font=\sffamily,
+  every matrix/.style={ampersand replacement=\&,column sep=1cm,row sep=1cm},
+  interface/.style={draw,thick,regular polygon,regular polygon sides=4,inner sep=0},
+  process/.style={draw,thick,rounded corners,inner sep=.3 cm},
+  datastore/.style={draw,thick,shape=datastore,inner sep=.3cm},
+  to/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  bidi/.style={<->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  every node/.style={scale=0.9,align=center}]
+
+  % Position the nodes using a matrix layout.
+  \matrix{
+        \& \node[interface] (consumer) {Consumer}; \\
+        \& \node[process] (api) {Serve API}; \\
+        \& \node[datastore] (raw) {Raw events \\ (stream)}; \\
+    \node[process] (formatter) {Format \\ for logging};
+        \& \node[process] (feed) {Format feed};
+            \& \node[process] (dispatcher) {Perform actions}; \\
+    \node[datastore] (log) {Raw event log \\ (PostgreSQL, private)};
+        \& \node[interface] (subscriber) {Subscriber};
+            \& \node[datastore] (db) {State database}; \\
+    \node[process] (dumper) {Dumper}; \\
+    \node[datastore] (modern-log) {Uniform log \\ (jsonlines, public)}; \\
+  };
+
+  \node [below=2cm, right=-2cm, align=flush center] at (modern-log)
+  {\Large Judgment and Dialog Engine (JADE) events \\ \normalsize data flow diagram};
+
+  % Draw and label arrows between nodes.
+  \draw[bidi] (consumer) --
+        node[midway, left] {requests}
+        node[midway, right] {responses}
+        (api);
+  \draw[to] (api) -- node[midway, right] {event stream} (raw);
+  \tkzMarkSegment[pos=.5,mark=||](api, raw)
+  \draw[to] (raw) -- (feed);
+  \tkzMarkSegment[pos=.5,mark=||](raw, feed)
+  \draw[to] (feed) -- (subscriber);
+  \draw[to] (raw) -- node[midway, right] {update judgments} (dispatcher);
+  \tkzMarkSegment[pos=.5,mark=||](raw, dispatcher)
+  \draw[to] (raw) -- (formatter);
+  \tkzMarkSegment[pos=.5,mark=||](raw, formatter)
+  \draw[to] (formatter) -- (log);
+  \draw[to] (dispatcher) -- (db);
+  \draw[to] (db) -- (dumper);
+  \draw[to] (dumper) -- (modern-log);
+
+\end{tikzpicture}
+\end{document}
