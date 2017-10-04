@@ -7,7 +7,7 @@ SVG_FILES := $(TEX_SOURCES:.tex=.svg)
 all: pdf svg
 
 pdf: $(PDF_FILES)
-svg: $(PDF_FILES)
+svg: $(SVG_FILES)
 
 
 %.pdf: %.tex
