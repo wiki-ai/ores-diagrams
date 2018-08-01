@@ -2,7 +2,6 @@
 \documentclass{article}
 \usepackage{tikz}
 \usepackage[strict]{changepage}
-\usepackage[a3paper]{geometry}
 \usetikzlibrary{arrows,shapes}
 
 % Disable page number for better SVG.
@@ -38,7 +37,7 @@
         \& \node[package] (jobs) {Job queue: \\ Celery};
           \& \node[package] (webservice) {Web service}; \\
   };
-  \draw[realization] (extraction-cache-interface) -- (extraction-cache-jsonlines);
+  \draw[realization] (extraction-cache-jsonlines) -- (extraction-cache-interface);
   \draw[depends] (extractor) -- (extraction-cache-interface);
   \draw[depends] (extractor) -- (dependency);
   \draw[depends] (dependency) -- (datasource-interface);
